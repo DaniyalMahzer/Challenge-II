@@ -1,5 +1,8 @@
 {
   "credentials": {
     "username": "Test User"
+  },
+  "links": {
+    "order_link": "https://robotsparebinindustries.com/#/robot-order"
   }
 }

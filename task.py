@@ -27,7 +27,8 @@ class Certificate_II:
         return data
 
     def place_orders(self, data):
-        self.browser.open_available_browser("https://robotsparebinindustries.com/#/robot-order", maximized=True)
+        links = self.secret.get_secret("links")
+        self.browser.open_available_browser(links["order_link"], maximized=True)
         for item in data:
             try:
                 self.browser.wait_until_page_contains("Order")
