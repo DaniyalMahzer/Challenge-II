@@ -1,0 +1,14 @@
+tasks:
+  Using vault:
+    command:
+      - python
+      - task.py
+
+condaConfigFile: conda.yaml
+artifactsDir: output
+ignoreFiles:
+  - .gitignore
+PATH:
+  - .
+PYTHONPATH:
+  - .
