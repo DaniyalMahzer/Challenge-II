@@ -4,6 +4,7 @@ from RPA.Excel.Files import Files
 from RPA.PDF import PDF
 from RPA.Archive import Archive
 from RPA.Robocorp.Vault import FileSecrets
+from RPA.FileSystem import FileSystem
 
 
 class Certificate_II:
@@ -13,6 +14,7 @@ class Certificate_II:
     dialogs = Dialogs()
     archive = Archive()
     secret = FileSecrets()
+    filesys = FileSystem()
 
     def make_zip(self):
         self.archive.archive_folder_with_zip("output", "output/orders")
@@ -22,6 +24,8 @@ class Certificate_II:
         self.dialogs.add_text(f"Hi {user['username']}!")
         self.dialogs.add_file_input(name="orders")
         user = self.dialogs.run_dialog()
+        self.filesys.change_file_extension(path=user.orders[0], extension=".xlsx")
+        print(user.orders[0])
         self.excel.open_workbook(path=user.orders[0])
         data = self.excel.read_worksheet(header=True)
         return data
