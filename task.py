@@ -18,17 +18,30 @@ class Certificate_II:
 
     def make_zip(self):
         self.archive.archive_folder_with_zip("output", "output/orders")
+        self.dialogs.add_file("output/orders.zip")
+        self.dialogs.run_dialog()
 
     def read_orders(self):
         user = self.secret.get_secret("credentials")
         self.dialogs.add_text(f"Hi {user['username']}!")
         self.dialogs.add_file_input(name="orders")
         user = self.dialogs.run_dialog()
-        self.filesys.change_file_extension(path=user.orders[0], extension=".xlsx")
-        print(user.orders[0])
-        self.excel.open_workbook(path=user.orders[0])
-        data = self.excel.read_worksheet(header=True)
-        return data
+        readed = self.filesys.read_file(user.orders[0])
+        real_data = []
+        data = readed.split("\n")
+        for item in data:
+            test_data = item.split(",")
+            real_data.append({
+                "Order number": test_data[0],
+                "Head": test_data[1],
+                "Body": test_data[2],
+                "Legs": test_data[3],
+                "Address": test_data[4],
+            })
+        real_data.pop(0)
+        # self.excel.open_workbook(path=user.orders[0])
+        # data = self.excel.read_worksheet(header=True)
+        return real_data
 
     def place_orders(self, data):
         links = self.secret.get_secret("links")
