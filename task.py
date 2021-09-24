@@ -18,7 +18,7 @@ class Certificate_II:
 
     def make_zip(self):
         self.archive.archive_folder_with_zip("output", "output/orders")
-        self.dialogs.add_file("output/orders.zip")
+        self.dialogs.add_file("output/orders")
         self.dialogs.run_dialog()
 
     def read_orders(self):
@@ -26,22 +26,25 @@ class Certificate_II:
         self.dialogs.add_text(f"Hi {user['username']}!")
         self.dialogs.add_file_input(name="orders")
         user = self.dialogs.run_dialog()
-        readed = self.filesys.read_file(user.orders[0])
-        real_data = []
-        data = readed.split("\n")
-        for item in data:
-            test_data = item.split(",")
-            real_data.append({
-                "Order number": test_data[0],
-                "Head": test_data[1],
-                "Body": test_data[2],
-                "Legs": test_data[3],
-                "Address": test_data[4],
-            })
-        real_data.pop(0)
-        # self.excel.open_workbook(path=user.orders[0])
-        # data = self.excel.read_worksheet(header=True)
-        return real_data
+        if self.filesys.get_file_extension(user.orders[0]) == ".csv":
+            file_data = self.filesys.read_file(user.orders[0])
+            real_data = []
+            data = file_data.split("\n")
+            for item in data:
+                test_data = item.split(",")
+                real_data.append({
+                    "Order number": test_data[0],
+                    "Head": test_data[1],
+                    "Body": test_data[2],
+                    "Legs": test_data[3],
+                    "Address": test_data[4],
+                })
+            real_data.pop(0)
+            return real_data
+        else:
+            self.excel.open_workbook(path=user.orders[0])
+            data = self.excel.read_worksheet(header=True)
+            return data
 
     def place_orders(self, data):
         links = self.secret.get_secret("links")
